@@ -33,7 +33,9 @@ export async function getRatio(tickerOne, tickerTwo) {
 function Row({ tickers, key, editMode, handleRemove }) {
   return {
     editMode: editMode,
-    handleRemove: () => handleRemove(key),
+    remove() {
+      handleRemove(key)
+    },
     text: "loading...",
     ratio: null,
     isLoading: false, // Add this to the reactive state in Row
@@ -52,7 +54,7 @@ function Row({ tickers, key, editMode, handleRemove }) {
 		  <div class="rounded flex items-center w-full">
 			  <div class="w-full bg-yellow-200 p-2 font-mono">{{ text }}</div>
 			  <div
-				  v-scope="CloseButton({ show: editMode, key: key, handler: handleRemove })">
+				  v-scope="CloseButton({ show: editMode, key: key, handler: remove })">
 				</div>
 			</div>
 		`,
@@ -85,10 +87,7 @@ function Button({ label }) {
 }
 
 function Rows({ pair_sets, editMode, handleRemove }) {
-  console.log("editMode: ", editMode)
-
   return {
-    mounted() {},
     editMode,
     handleRemove,
     pair_sets,
@@ -137,6 +136,7 @@ const store = reactive({
       key: randomKey(),
       ratio: null,
     }
+
     this.pair_sets.push(new_pair)
   },
   remove(key) {
