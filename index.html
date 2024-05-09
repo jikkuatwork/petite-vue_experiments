@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="description" content="TODO" />
+    <meta name="theme-color" content="#000" />
+
+    <title>Prop Drilling Bug</title>
+
+    <link rel="canonical" href="TODO" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="https://i.imgur.com/dURj31a.png"
+    />
+
+    <meta property="og:title" content="TODO" />
+    <meta property="og:site_name" content="TODO" />
+    <meta property="og:url" content="TODO" />
+    <meta property="og:description" content="TODO" />
+    <meta property="og:type" content="product" />
+    <meta property="og:image" content="https://i.imgur.com/7NDUolV.png" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+    />
+    <link rel="stylesheet" href="https://cdn.toolbomber.com/css/tw.css" />
+    <script type="module">
+      import {
+        createApp,
+        reactive,
+      } from "https://cdn.skypack.dev/petite-vue@0.4.1"
+
+      export async function getRatio(tickerOne, tickerTwo) {
+        const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${tickerOne},${tickerTwo}&tsyms=USD`
+        try {
+          const response = await fetch(url, {
+            headers: {},
+            body: null,
+            method: "GET",
+            mode: "cors",
+            credentials: "omit",
+          })
+          const data = await response.json()
+          if (
+            data.RAW &&
+            data.RAW[tickerOne] &&
+            data.RAW[tickerTwo] &&
+            data.RAW[tickerOne].USD &&
+            data.RAW[tickerTwo].USD
+          ) {
+            const priceOne = data.RAW[tickerOne].USD.PRICE
+            const priceTwo = data.RAW[tickerTwo].USD.PRICE
+            const ratio = priceOne / priceTwo
+            return Math.round((ratio + Number.EPSILON) * 100) / 100 // Rounding to two decimal places
+          } else {
+            throw new Error("Data for one or both tickers is missing")
+          }
+        } catch (error) {
+          return null
+        }
+      }
+
+      function Row({ tickers, key, editMode, handleRemove }) {
+        return {
+          editMode,
+          handleRemove: () => handleRemove(key),
+          text: "loading...",
+          ratio: null,
+          isLoading: false, // Add this to the reactive state in Row
+          async updateRatio() {
+            if (this.ratio === null && !this.isLoading) {
+              this.isLoading = true
+              let new_ratio = await getRatio(...tickers)
+              this.text = `1 ${tickers[0]} = ${new_ratio} ${tickers[1]}`
+              this.ratio = new_ratio
+              this.isLoading = false
+            }
+          },
+          key,
+          CloseButton,
+          $template: `
+		  <div class="rounded flex items-center w-full">
+			  <div class="w-full bg-yellow-200 p-2 font-mono">{{ text }}</div>
+			  <div
+				  v-show="store.editMode"
+				  v-scope="CloseButton({ show: editMode, key: key, handler: handleRemove })">
+				</div>
+			</div>
+		`,
+        }
+      }
+
+      const CloseButton = ({ show, key, handler }) => {
+        return {
+          show: show,
+          key,
+          remove: handler,
+          $template: `
+		<div
+			v-show="show"
+      @click="remove"
+			class="bg-red-600 p-2 cp hover:bg-red-700"
+		>x</div>`,
+        }
+      }
+
+      function Button({ label }) {
+        return {
+          label,
+          $template: `
+		  <div
+				class="s p-2 rounded bg-green-100 flex cp select-none"
+			>{{ label }}</div>
+		`,
+        }
+      }
+
+      function Rows({ pair_sets, editMode, handleRemove }) {
+        return {
+          editMode,
+          handleRemove,
+          pair_sets,
+          $template: `
+		   	<div
+				 v-for="pair in pair_sets"
+				 :key="pair.key"
+				 v-scope="Row({ tickers: pair.tickers, key: pair.key, editMode, handleRemove  })"
+				 class="flex flex-col gap-2"
+				 @vue:mounted="updateRatio()"
+		    ></div>
+		`,
+        }
+      }
+
+      const randomKey = () => Math.floor(1000 * Math.random())
+
+      const sample = array => array[Math.floor(Math.random() * array.length)]
+
+      const store = reactive({
+        editMode: true,
+        pair_sets: [
+          {
+            tickers: ["BTC", "ETH"],
+            key: 0,
+            ratio: null,
+          },
+          {
+            tickers: ["ETH", "ETC"],
+            key: 1,
+            ratio: null,
+          },
+          {
+            tickers: ["SOL", "FTM"],
+            key: 89,
+            ratio: null,
+          },
+        ],
+        pop() {
+          this.pair_sets.pop()
+        },
+        add() {
+          const cryptos = () =>
+            sample(["XRP", "ZEC", "BNB", "TON", "FTM", "SOL"])
+          const new_pair = {
+            tickers: [cryptos(), cryptos()],
+            key: randomKey(),
+            ratio: null,
+          }
+          this.pair_sets.push(new_pair)
+        },
+        remove(key) {
+          console.log(this.pair_sets)
+          const index = this.pair_sets.findIndex(item => item.key === key)
+          if (index !== -1) {
+            this.pair_sets.splice(index, 1)
+          }
+        },
+        async toggleEdit() {
+          this.editMode = !this.editMode
+        },
+      })
+      createApp({
+        Button,
+        store,
+        Rows,
+        Row,
+      }).mount()
+    </script>
+  </head>
+  <body>
+    <div class="w-full min-h-screen bg-gray-300 flex justify-center pt-8 px-2">
+      <div v-scope class="max-w-xl flex flex-col w-full">
+        <div class="flex py-2 gap-2">
+          <div v-scope="Button({label: 'Add' })" @click="store.add"></div>
+          <div v-scope="Button({label: 'Pop' })" @click="store.pop"></div>
+          <div
+            v-scope="Button({label: 'Toggle' })"
+            @click="store.toggleEdit"
+          ></div>
+        </div>
+
+        <div class="p-2 bg-white rounded-md mb-4 flex flex-col">
+          <div class="mb-2 text-sm">Iterate in markup</div>
+          <div
+            class="flex flex-col gap-2"
+            v-for="pair in store.pair_sets"
+            :key="pair.key"
+            @vue:mounted="updateRatio()"
+            v-scope="Row({
+											tickers: pair.tickers,
+											key: pair.key,
+											editMode: store.editMode,
+											handleRemove: store.remove
+										})"
+          ></div>
+        </div>
+
+        <div class="p-2 bg-white rounded-md mb-4 flex flex-col">
+          <div class="mb-2 text-sm">Iterate in component</div>
+          <div
+            v-scope="Rows({
+	 									   pair_sets: store.pair_sets,
+	 									   editMode: store.editMode,
+	 									   handleRemove: store.remove
+									   })"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
