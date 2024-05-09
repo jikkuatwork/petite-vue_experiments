@@ -88,7 +88,12 @@ function Button({ label }) {
 }
 
 function Rows({ pair_sets, editMode, handleRemove }) {
+  console.log("rows")
+
   return {
+    mounted() {
+      console.log("Rows mounted")
+    },
     editMode,
     handleRemove,
     pair_sets,
@@ -116,6 +121,7 @@ const randomKey = () => Math.floor(1000 * Math.random())
 const sample = array => array[Math.floor(Math.random() * array.length)]
 
 const store = reactive({
+  show: { value: true },
   editMode: false,
   pair_sets: [
     {
@@ -154,6 +160,9 @@ const store = reactive({
     }
   },
   toggleEdit() {
+    console.log(this.editMode)
+    console.log(this)
+
     this.editMode = !this.editMode
   },
 })

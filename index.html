@@ -67,9 +67,10 @@
           <div
             v-scope="Rows({
 	 									   pair_sets: store.pair_sets,
-	 									   editMode: store.editMode,
+	 									   editMode: store.show,
 	 									   handleRemove: store.remove
 									   })"
+            @vue:mounted="mounted"
           ></div>
         </div>
       </div>
