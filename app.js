@@ -32,7 +32,7 @@ export async function getRatio(tickerOne, tickerTwo) {
 
 function Row({ tickers, key, editMode, handleRemove }) {
   return {
-    editMode,
+    editMode: editMode,
     handleRemove: () => handleRemove(key),
     text: "loading...",
     ratio: null,
@@ -52,7 +52,6 @@ function Row({ tickers, key, editMode, handleRemove }) {
 		  <div class="rounded flex items-center w-full">
 			  <div class="w-full bg-yellow-200 p-2 font-mono">{{ text }}</div>
 			  <div
-				  v-show="store.editMode"
 				  v-scope="CloseButton({ show: editMode, key: key, handler: handleRemove })">
 				</div>
 			</div>
@@ -61,15 +60,13 @@ function Row({ tickers, key, editMode, handleRemove }) {
 }
 
 const CloseButton = ({ show, key, handler }) => {
-  console.log(show, key)
-
   return {
     show: show,
     key,
     remove: handler,
     $template: `
 		<div
-			v-show="show"
+			v-show="show.value"
       @click="remove"
 			class="bg-red-600 p-2 cp hover:bg-red-700"
 		>x</div>`,
@@ -88,12 +85,10 @@ function Button({ label }) {
 }
 
 function Rows({ pair_sets, editMode, handleRemove }) {
-  console.log("rows")
+  console.log("editMode: ", editMode)
 
   return {
-    mounted() {
-      console.log("Rows mounted")
-    },
+    mounted() {},
     editMode,
     handleRemove,
     pair_sets,
@@ -109,20 +104,12 @@ function Rows({ pair_sets, editMode, handleRemove }) {
   }
 }
 
-const ComputedRows = () =>
-  Rows({
-    pair_sets: store.pair_sets,
-    editMode: store.editMode,
-    handleRemove: store.remove,
-  })
-
 const randomKey = () => Math.floor(1000 * Math.random())
 
 const sample = array => array[Math.floor(Math.random() * array.length)]
 
 const store = reactive({
   show: { value: true },
-  editMode: false,
   pair_sets: [
     {
       tickers: ["BTC", "ETH"],
@@ -153,17 +140,13 @@ const store = reactive({
     this.pair_sets.push(new_pair)
   },
   remove(key) {
-    console.log(this.pair_sets)
     const index = this.pair_sets.findIndex(item => item.key === key)
     if (index !== -1) {
       this.pair_sets.splice(index, 1)
     }
   },
   toggleEdit() {
-    console.log(this.editMode)
-    console.log(this)
-
-    this.editMode = !this.editMode
+    this.show.value = !this.show.value
   },
 })
 createApp({
