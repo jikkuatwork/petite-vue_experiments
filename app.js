@@ -50,14 +50,14 @@ function Row({ tickers, key, editMode, handleRemove }) {
     },
     key,
     CloseButton,
-    $template: `
-		  <div class="rounded flex items-center w-full">
-			  <div class="w-full bg-yellow-200 p-2 font-mono">{{ text }}</div>
-			  <div
-				  v-scope="CloseButton({ show: editMode, key: key, handler: remove })">
-				</div>
-			</div>
-		`,
+    $template: /* HTML */ `
+      <div class="rounded flex items-center w-full">
+        <div class="w-full bg-yellow-200 p-2 font-mono">{{ text }}</div>
+        <div
+          v-scope="CloseButton({ show: editMode, key: key, handler: remove })"
+        ></div>
+      </div>
+    `,
   }
 }
 
@@ -66,23 +66,24 @@ const CloseButton = ({ show, key, handler }) => {
     show: show,
     key,
     remove: handler,
-    $template: `
-		<div
-			v-show="show.value"
+    $template: /* HTML */ ` <div
+      v-show="show.value"
       @click="remove"
-			class="bg-red-600 p-2 cp hover:bg-red-700"
-		>x</div>`,
+      class="bg-red-600 p-2 cp hover:bg-red-700"
+    >
+      x
+    </div>`,
   }
 }
 
 function Button({ label }) {
   return {
     label,
-    $template: `
-		  <div
-				class="s p-2 rounded bg-green-100 flex cp select-none"
-			>{{ label }}</div>
-		`,
+    $template: /* HTML */ `
+      <div class="s p-2 rounded bg-green-100 flex cp select-none">
+        {{ label }}
+      </div>
+    `,
   }
 }
 
@@ -91,15 +92,15 @@ function Rows({ pair_sets, editMode, handleRemove }) {
     editMode,
     handleRemove,
     pair_sets,
-    $template: `
-		   	<div
-				 v-for="pair in pair_sets"
-				 :key="pair.key"
-				 v-scope="Row({ tickers: pair.tickers, key: pair.key, editMode, handleRemove  })"
-				 class="flex flex-col gap-2"
-				 @vue:mounted="updateRatio()"
-		    ></div>
-		`,
+    $template: /* HTML */ `
+      <div
+        v-for="pair in pair_sets"
+        :key="pair.key"
+        v-scope="Row({ tickers: pair.tickers, key: pair.key, editMode, handleRemove  })"
+        class="flex flex-col gap-2"
+        @vue:mounted="updateRatio()"
+      ></div>
+    `,
   }
 }
 
@@ -108,7 +109,7 @@ const randomKey = () => Math.floor(1000 * Math.random())
 const sample = array => array[Math.floor(Math.random() * array.length)]
 
 const store = reactive({
-  show: { value: true },
+  show: { value: false },
   pair_sets: [
     {
       tickers: ["BTC", "ETH"],
