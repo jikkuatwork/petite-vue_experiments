@@ -111,10 +111,10 @@ const store = reactive({
 
     this.pair_sets.push(new_pair)
   },
-  remove(key) {
-    const index = this.pair_sets.findIndex(item => item.key === key)
+  remove: key => {
+    const index = store.pair_sets.findIndex(item => item.key === key)
     if (index !== -1) {
-      this.pair_sets.splice(index, 1)
+      store.pair_sets.splice(index, 1)
     }
   },
   toggleEdit() {
