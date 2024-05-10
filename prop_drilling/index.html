@@ -54,11 +54,11 @@
             :key="pair.key"
             @vue:mounted="updateRatio()"
             v-scope="Row({
-											tickers: pair.tickers,
-											key: pair.key,
-											editMode: store.show,
-											handleRemove: store.remove.bind(store)
-										})"
+                       tickers: pair.tickers,
+                       key: pair.key,
+                       editMode: store.show,
+                       handleRemove: store.remove.bind(store)
+                    })"
           ></div>
         </div>
 
@@ -66,10 +66,10 @@
           <div class="mb-2 text-sm">Iterate in component</div>
           <div
             v-scope="Rows({
-	 									   pair_sets: store.pair_sets,
-	 									   editMode: store.show,
-	 									   handleRemove: store.remove
-									   })"
+                       pair_sets: store.pair_sets,
+                       editMode: store.show,
+                       handleRemove: store.remove
+                     })"
           ></div>
         </div>
       </div>
