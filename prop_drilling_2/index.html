@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Prop Drilling Bug</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+    />
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body class="bg-gray-300 flex justify-center pt-8 px-2 min-h-screen">
+    <div class="max-w-xl flex flex-col w-full">
+      <div class="flex py-2 gap-2">
+        <div v-scope="Button({ label: 'Add' })" @click="store.add"></div>
+        <div v-scope="Button({ label: 'Pop' })" @click="store.pop"></div>
+        <div
+          v-scope="Button({ label: 'Toggle' })"
+          @click="store.toggleEdit"
+        ></div>
+      </div>
+
+      <div class="p-2 bg-white rounded-md mb-4 flex flex-col">
+        <div class="mb-2 text-sm">Iterate in markup (Buggy Version)</div>
+        <div
+          v-for="pair in store.pair_sets"
+          :key="pair.key"
+          @vue:mounted="updateRatio()"
+          v-scope="Row({
+        tickers: pair.tickers, key: pair.key, editMode: store.show, handleRemove: store.remove })"
+          class="flex flex-col gap-2"
+        ></div>
+      </div>
+
+      <div class="p-2 bg-white rounded-md mb-4 flex flex-col">
+        <div class="mb-2 text-sm">Iterate in component</div>
+        <div
+          v-scope="Rows({ pair_sets: store.pair_sets, editMode: store.show, handleRemove: store.remove })"
+        ></div>
+      </div>
+    </div>
+  </body>
+</html>
