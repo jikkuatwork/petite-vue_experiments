@@ -1,3 +1,18 @@
-import { createApp } from "https://unpkg.com/petite-vue@0.2.2/dist/petite-vue.es.js"
+import {
+  createApp,
+  reactive,
+} from "https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/+esm"
 
-createApp({}).mount()
+import { Toggle } from "./components/Toggle.js"
+
+const store = reactive({
+  isOn: { value: true },
+  toggle() {
+    this.isOn.value = !this.isOn.value
+  },
+})
+
+createApp({
+  Toggle,
+  store,
+}).mount()
