@@ -8,9 +8,11 @@
  * 04. Component can have local state but mostly it will be a PURE component
  * 05. Component will not depend on anything except tailwind (v2.2.19)
  * 06. `$template`'s value will be prepended by `\/* HTML *\/` for prettier
- * 07. Props must have default values, with functions logging arguments
+ * 07. Props must have default values & function's default values should log arguments
  * 08. All state will be managed outside the component
- * 09. Classes can be generated: code needs to be provided as *key values* for `:class`
+ * 09. Classes can be generated: code needs to be provided as functions in *key values* for `:class`
+ * 10. All dynamic values in `$template` must be returned by the function
+ * 11. If another component is referenced in a template, it should be included in the return object (eg: Toggle is returned in Cell)
  *
  * */
 
