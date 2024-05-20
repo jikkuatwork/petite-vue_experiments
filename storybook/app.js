@@ -7,7 +7,7 @@ let Example = () => {
   const label = "Hello"
   const $template = /* HTML */ `
     <div class="">
-      <div class="p-2 bg-yellow-300 rounded cp select-none">{{ label }}</div>
+      <div class="p-2 bg-yellow-300 rounded">{{ label }}</div>
     </div>
   `
   return { $template, label }
@@ -17,7 +17,7 @@ let CounterExample = () => {
   const label = "Yo Man!"
   const $template = /* HTML */ `
     <div class="">
-      <div class="p-2 bg-red-600 rounded cp select-none">{{ label }}</div>
+      <div class="p-2 bg-red-600 rounded">{{ label }}</div>
     </div>
   `
   return { $template, label }
@@ -50,9 +50,9 @@ const store = reactive({
     const target = document.querySelector("#dynamic-component")
     target.remove()
 
-    const _dynamicComponent = document.querySelector("#component-container")
-    _dynamicComponent.innerHTML = `<div id="dynamic-component" v-scope="store.dynamicComponent()" @click="store.cycle()"></div>`
-    createApp({ store }).mount("#dynamic-component")
+    const componentContainer = document.querySelector("#component-container")
+    componentContainer.innerHTML = `<div id="dynamic-component" v-scope="store.dynamicComponent()"></div>`
+    createApp({ store }).mount("#app")
   },
   cycle() {
     this.index.value++
@@ -62,4 +62,4 @@ const store = reactive({
 
 store.loadComponent()
 
-createApp({ store }).mount("#dynamic-component")
+createApp({ store }).mount("#app")

@@ -41,17 +41,20 @@
     <script type="module" src="./app.js"></script>
   </head>
   <body>
-    <div id="#app" class="page bg-dark-100 c">
-      <div class="w-full min-h-screen max-w-3xl bg-dark-200 c">
-        <div
-          id="component-container"
-          class="flex justify-evenly gap-2 flex-wrap"
-        >
+    <div id="app" class="page bg-dark-100 c">
+      <div
+        class="w-full min-h-screen max-w-3xl bg-dark-200 pt-16 items-center flex flex-col gap-8"
+      >
+        <div id="controls">
           <div
-            id="dynamic-component"
-            v-scope="store.dynamicComponent({})"
-            @click="store.cycle"
-          ></div>
+            class="p-2 rounded select-none cp bg-blue-300"
+            @click="store.cycle()"
+          >
+            Cycle
+          </div>
+        </div>
+        <div id="component-container">
+          <div id="dynamic-component" v-scope="store.dynamicComponent()"></div>
         </div>
       </div>
     </div>
