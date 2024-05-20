@@ -45,7 +45,10 @@
       <div class="w-full min-h-screen max-w-3xl bg-dark-200 c">
         <div class="flex justify-evenly gap-2 flex-wrap">
           <div
-            v-scope="Toggle({isOn: store.isOn, handleChange: store.toggle, themeColor: 'blue-500'})"
+            v-scope="Cell({isOn: store.isOn, handleChange: store.toggle, themeColor: store.themeColor})"
+          ></div>
+          <div
+            v-scope="Button({ handleClick: store.toggleTheme.bind(store) })"
           ></div>
         </div>
       </div>
