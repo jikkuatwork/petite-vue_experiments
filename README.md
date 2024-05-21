@@ -1,13 +1,11 @@
 # Petite Vue Experiments
 
-I am trying to wrap my mind around Pettie Vue and these are the issues I faced
-while building with it.
+These are experiements to test the capabilities of Petite Vue.
 
-## Issues
+## Experiments
 
-### 01 - Prop Drilling
-
-I am trying to send a boolean deep within two nested components. But while doing
-it I noticed that reactivity is lost.
-
-I found a hack to wrap the boolean with an object, but it feels wrong.
+#    | Name        | Remark
+---- | ----------- | -------------------------------------------
+1    | props       | Understanding prop drilling
+2    | reference   | Creating a reference component for ChatGPT
+3    | remote_load | Dynamically loading components from URLs
