@@ -25,6 +25,7 @@ let CounterExample = () => {
 
 const store = reactive({
   index: { value: 0 },
+  url: { value: "helo" },
   components: [
     { type: "local", value: Example },
     { type: "local", value: CounterExample },
