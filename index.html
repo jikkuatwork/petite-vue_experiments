@@ -42,8 +42,15 @@
   </head>
   <body>
     <div class="page bg-dark-100 c">
-      <div class="w-full min-h-screen max-w-3xl bg-dark-200 c">
-        <div class="flex justify-evenly gap-2 flex-wrap"></div>
+      <div class="w-full min-h-screen max-w-3xl bg-dark-200 pt-24">
+        <div class="flex justify-evenly gap-2 flex-wrap w-full px-4">
+          <div
+            v-for="experiment in store.experiments"
+            v-scope="Card({ ...experiment })"
+            class="w-full"
+            :key="experiment.key"
+          ></div>
+        </div>
       </div>
     </div>
   </body>
