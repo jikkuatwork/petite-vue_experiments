@@ -3,6 +3,8 @@ import {
   reactive,
 } from "https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/+esm"
 
+import Input from "https://rough.toolbomber.com/pv/Input.js"
+
 let Example = () => {
   const label = "Hello"
   const $template = /* HTML */ `
@@ -26,18 +28,26 @@ let CounterExample = () => {
 const store = reactive({
   index: { value: 0 },
   url: { value: "helo" },
+  submit() {
+    const remoteComponent = { type: "remote", value: this.url.value }
+    this.components.push(remoteComponent)
+
+    const last = this.components.length - 1
+    this.loadComponent(last)
+  },
   components: [
     { type: "local", value: Example },
-    { type: "local", value: CounterExample },
     {
       type: "remote",
       value: "https://rough.toolbomber.com/pv/Avatar/index.js",
     },
+    { type: "local", value: CounterExample },
   ],
   dynamicComponent: null,
-  async loadComponent() {
-    const _component =
-      this.components[this.index.value % this.components.length]
+  async loadComponent(_index = null) {
+    const index =
+      _index == null ? this.index.value % this.components.length : _index
+    const _component = this.components[index]
     if (_component.type == "local") {
       this.dynamicComponent = _component.value
     } else {
@@ -53,7 +63,7 @@ const store = reactive({
 
     const componentContainer = document.querySelector("#component-container")
     componentContainer.innerHTML = `<div id="dynamic-component" v-scope="store.dynamicComponent()"></div>`
-    createApp({ store }).mount("#app")
+    createApp({ store, Input }).mount("#app")
   },
   cycle() {
     this.index.value++
@@ -63,4 +73,4 @@ const store = reactive({
 
 store.loadComponent()
 
-createApp({ store }).mount("#app")
+createApp({ store, Input }).mount("#app")
