@@ -51,7 +51,7 @@ const store = reactive({
     if (_component.type == "local") {
       this.dynamicComponent = _component.value
     } else {
-      const module = await import(_component.value)
+      const module = await import(/* @vite-ignore */ _component.value)
       this.dynamicComponent = module.default
     }
 
